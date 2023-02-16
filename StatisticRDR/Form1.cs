@@ -15,6 +15,7 @@ using System.Threading;
 namespace StatisticRDR
 {
     public delegate void MyDelegate(string[] str);
+    public delegate void MyDelegate1(string s1,string s2,string s3,string s4);
 
     
     public partial class Form1 : Form
@@ -22,6 +23,11 @@ namespace StatisticRDR
         string ConnectionString;
         string[] category;
         string[] lib;
+        string _host;
+        string _port;
+        string _user;
+        string _password;
+
         public Form1()
         {
             InitializeComponent();         
@@ -31,8 +37,6 @@ namespace StatisticRDR
             InitializeComboboxLibrary();
             SomethingLikeProgressWork();
             InitializeConnectionString();
-
-            //InitializeLoadingCircle();
         }
         public void MakeProgressBarInvisible()
         {
@@ -151,17 +155,13 @@ namespace StatisticRDR
         }
         public void InitializeForms()
         {
-          //  comboBoxStatForms.Items.Add("StatForm5");
+            comboBoxStatForms.Items.Add("StatForm5");
             comboBoxStatForms.Items.Add("StatForm6");
-            comboBoxStatForms.SelectedIndex = 0; 
-          //  comboBoxStatForms.Items.Add("StatForm11");
-          //  comboBoxStatForms.Items.Add("StatForm12");
+            comboBoxStatForms.Items.Add("StatForm11");
+            comboBoxStatForms.Items.Add("StatForm12");
+            comboBoxStatForms.SelectedIndex = 1;
         }
-        public void InitializeConnectionString()
-        {       
-                ConnectionString = "host=10.24.223.197;port=6666;user=Архаров;password=0411;db=RDR;";
-                label5.Text = "Версия: основная";
-        }
+        
         public void InitializeComboboxLibrary()
         {
             radioButton1.Checked = true;
@@ -193,16 +193,32 @@ namespace StatisticRDR
         {
             textBoxAnswer.Text = "";
         }
-       
 
-        
+        public void DoStatForm5()
+        {
+            string[] lib = GetLibraries();
+            string[] cat = GetCategories();
+            StatForm5.CreateTable(lib, cat, textBoxDate.Text, ConnectionString);
+        }
+
         public void DoStatForm6()
         {
             string[] lib = GetLibraries();
             string[] cat = GetCategories();            
             StatForm6.CreateTable(lib, cat, textBoxDate.Text, ConnectionString);
         }
-       
+        public void DoStatForm11()
+        {
+            string[] lib = GetLibraries();
+            string[] cat = GetCategories();
+            StatForm11.CreateTable(lib, cat, textBoxDate.Text, ConnectionString);
+        }
+        public void DoStatForm12()
+        {
+            string[] lib = GetLibraries();
+            string[] cat = GetCategories();
+            StatForm12.CreateTable(lib, cat, textBoxDate.Text, ConnectionString);
+        }
         public void UpdatePercentAtTextBox(double x)
         {
             double t = Convert.ToDouble(textBoxAnswer.Text);
@@ -220,11 +236,30 @@ namespace StatisticRDR
                 if (comboBoxStatForms.SelectedIndex == 0)
                 {
                     progressBar1.Visible = true;
-                    Thread myThread1 = new Thread(DoStatForm6);
+                    Thread myThread1 = new Thread(DoStatForm5);
                     myThread1.Start();
-                    textBoxAnswer.Text = "Подождите, пожалуйста...";
-                    
-
+                    textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
+                }
+                if (comboBoxStatForms.SelectedIndex == 1)
+                {
+                    progressBar1.Visible = true;
+                    Thread myThread2 = new Thread(DoStatForm6);
+                    myThread2.Start();
+                    textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
+                }
+                if (comboBoxStatForms.SelectedIndex == 2)
+                {
+                    progressBar1.Visible = true;
+                    Thread myThread3 = new Thread(DoStatForm11);
+                    myThread3.Start();
+                    textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
+                }
+                if (comboBoxStatForms.SelectedIndex == 3)
+                {
+                    progressBar1.Visible = true;
+                    Thread myThread4 = new Thread(DoStatForm12);
+                    myThread4.Start();
+                    textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
                 }
             }
            
@@ -330,7 +365,7 @@ namespace StatisticRDR
 
         private void основнаяToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ConnectionString = "host=10.24.223.197;port=6666;user=Архаров;password=0411;db=RDR;";
+            //ConnectionString = "host=10.24.223.197;port=6666;user=Архаров;password=0411;db=RDR;";
             label5.Text = "Версия: основная";
         }
 
@@ -338,6 +373,93 @@ namespace StatisticRDR
         {
             ConnectionString = "host=127.0.0.1;port=6666;user=1;password=1;db=RDR";
             label5.Text = "Версия: тестовая";
+        }
+
+        private void начальноеСостояниеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            progressBar1.Visible = false;
+            textBoxAnswer.Text = "Приложение готово к работе";
+        }
+
+        private void настройкаПриложенияToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MyDelegate1 @delegate = InitializeConnectionString;
+            (string, string, string, string) SeparateInfoConnection = SeparateConnectionString();
+            Form4 newForm = new Form4(SeparateInfoConnection.Item1,SeparateInfoConnection.Item2, SeparateInfoConnection.Item3, SeparateInfoConnection.Item4, @delegate);
+            newForm.Show();
+        }
+        public void InitializeConnectionString()
+        {
+            (string,string,string,string)s = ReadSeparateConnectionStringFromFile();
+            InitializeConnectionString(s.Item1,s.Item2,s.Item3,s.Item4);
+        }
+        public void InitializeConnectionString(string host,string port,string user,string password)
+        {
+            ConnectionString = "host=" + host + ";port=" + port + ";user=" + user + ";password=" + password + ";db=RDR;";
+            label5.Text = "Версия: основная";
+            SaveSeparateConnectionStringToFile(SeparateConnectionString());
+        }
+        public (string,string,string,string) ReadSeparateConnectionStringFromFile()
+        {
+            string[] answer;
+            string text;
+            string path = "ini1.txt";
+            using (StreamReader reader = new StreamReader(path))
+            {
+                text = reader.ReadToEnd();
+            }
+            answer = text.Split('\n');
+            answer = DeleteLastSymbolsExceptLastWord(answer);
+            string[] current = new string[answer.GetUpperBound(0)];
+            if (category.Last() == "")
+            {
+                for (int i = 0; i < category.GetUpperBound(0); i++)
+                {
+                    current[i] = answer[i];
+                }
+                answer = current;
+            }
+            return(answer[0],answer[1],answer[2],answer[3]);
+
+        }
+        
+        public void SaveSeparateConnectionStringToFile((string ,string ,string ,string)strTuple)
+        {
+            string path = "ini1.txt";
+            FileInfo fileInf = new FileInfo(path);
+            if (fileInf.Exists)
+            {
+                fileInf.Delete();
+                // альтернатива с помощью класса File
+                // File.Delete(path);
+            }
+            else
+            {
+                fileInf.Create();
+            }
+            StreamWriter wr = new StreamWriter("ini1.txt", true);
+            wr.WriteLine(strTuple.Item1);
+            wr.WriteLine(strTuple.Item2);
+            wr.WriteLine(strTuple.Item3);
+            wr.WriteLine(strTuple.Item4);
+
+            wr.Close();
+        }
+
+        public (string, string, string, string) SeparateConnectionString()
+        {
+           string[] s= ConnectionString.Split(';');
+           string[] t0 = s[0].Split('=');
+           string[] t1 = s[1].Split('=');
+           string[] t2 = s[2].Split('=');
+           string[] t3 = s[3].Split('=');
+            string s0 = t0[1];
+            string s1 = t1[1];
+            string s2 = t2[1];
+            string s3 = t3[1];
+            MessageBox.Show(s0+s1+s2+s3);
+            return(s0, s1, s2, s3);
+
         }
     }
     

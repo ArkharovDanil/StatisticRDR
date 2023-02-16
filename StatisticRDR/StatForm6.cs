@@ -1,62 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using ManagedIrbis;
 using ManagedIrbis.Batch;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
-using System.Threading;
 
-/// <summary>
-/// Первая сделанная форма, на неё в целом можно конечно ориентироваться, но не очень то и нужно, после 
-/// разработки будет необходимо провести рефакторинг кода, уже очевидно, что четыре созданных одинаковых формы всего лишь с разными поисками 
-/// это неадекватно :)
-/// </summary>
+
 namespace StatisticRDR
 {
     public class StatForm6
     {
         string ConnectionString;
         private static IrbisConnection Connection;
-        TextBox _textBoxAnswer;
-        StatForm6(List<string> rl, List<string>cl , TextBox textBoxAnswer, string CS)
-        {
-          
-            SetRowsList(rl);
-            SetColumnsList(cl);
-            int[][] array = new int[rl.Count][];
-            _textBoxAnswer = textBoxAnswer;
-            ConnectionString = CS;
-        }
-        
-        
-        private List<string> rowsList;
-        private List<string> columnsList;
-        List<string> GetRowsList()
-        {
-            return rowsList;
-            
-        }
-        void SetRowsList(List<string> rl)
-        {
-            rowsList = rl;
-        }
-        List<string> GetColumnsList()
-        {
-            return columnsList;
-        }
-        void SetColumnsList(List<string> cl)
-        {
-            columnsList = cl;
-        }
+
         /// <summary>
         /// вход в алгоритм
         /// </summary>
         /// <param name="library"></param>
         /// <param name="categories"></param>
         /// <param name="date"></param>
-        /// <param name="refreshPercent"></param>
         /// <param name="CS"></param>
         /// <returns></returns>
         static public int[] SearchForTable(string library,string[] categories,string date,string CS)
@@ -127,7 +90,6 @@ namespace StatisticRDR
      /// <param name="library"></param>
      /// <param name="categories"></param>
      /// <param name="date"></param>
-     /// <param name="refreshPercent"></param>
      /// <param name="CS"></param>
         static public void CreateTable(string[] library,string[] categories,string date,string CS)
         {   
@@ -138,50 +100,17 @@ namespace StatisticRDR
                 tableForLibraries[i] = SearchForTable(library[i],categories,date,CS);
             }
             ShowInExcelByCreating(tableForLibraries, library,categories, date);
-          //  delegate2();
             MessageBox.Show("Сделано");
         }
-        static public void ShowInExcel(int[][] tableForLibraries)
-        {
-            try
-            {
-                OpenFileDialog ofd = new OpenFileDialog();
-                // Задаем расширение имени файла по умолчанию (открывается папка с программой)
-                ofd.DefaultExt = "*.xls;*.xlsx";
-                // Задаем строку фильтра имен файлов, которая определяет варианты
-                ofd.Filter = "файл Excel (data.xls)|*.xls";
-                // Задаем заголовок диалогового окна
-                ofd.Title = "Выберите файл базы данных";
-                ofd.ShowDialog();
-                int RowsCount = tableForLibraries.GetUpperBound(0) + 1;
-                int ColumnsCount = tableForLibraries[0].Length;
-                Excel.Application ObjWorkExcel = new Excel.Application();
-                Excel.Workbook ObjWorkBook = ObjWorkExcel.Workbooks.Open(ofd.FileName);
-                Excel.Worksheet ObjWorkSheet = (Excel.Worksheet)ObjWorkBook.Sheets[1]; //получить 1-й лист
-                for (int i = 0; i < RowsCount; i++) //по всем строкам
-                    for (int j = 0; j < ColumnsCount; j++) // по всем столбцам
-                        ObjWorkSheet.Cells[i + 7, j + 3] = tableForLibraries[i][j]; //записываем данные
-                                                                                    // ObjWorkBook.Close(true, Type.Missing, Type.Missing); //закрыть и сохранить
-                ObjWorkExcel.Visible = true;
-                ObjWorkExcel.UserControl = true;
-                
-                //ObjWorkExcel.Quit(); // выйти из Excel
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-
-
-        }
+       
         static public void ShowInExcelByCreating(int[][] tableForLibraries, string[] library, string[] categories, string date)
         {
-            string path= "C:\\tempStatRDR";
+            string path = "C:\\tempStatRDR\\StatForm6";
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
-            string fileName = "C:\\tempStatRDR\\"+DateTime.Now.ToLongDateString()+"-"+ReturnAsNormalDate(date)+".xls";
+            string fileName = "C:\\tempStatRDR\\StatForm6\\" + DateTime.Now.ToLongDateString()+"-"+ReturnAsNormalDate(date)+".xls";
 
             try
             {
@@ -193,7 +122,7 @@ namespace StatisticRDR
 
                 int RowsCount = tableForLibraries.GetUpperBound(0) + 1;
                 int ColumnsCount = tableForLibraries[0].Length;
-                workSheet.Cells[1, "A"] = "Распределение книговыдач по категориям читателей  и местам выдач за "+ReturnAsNormalDate(date);
+                workSheet.Cells[1, "A"] = "Распределение посещений по категориям читателей  и местам выдач за "+ReturnAsNormalDate(date);
                 for (int i = 0;i<RowsCount;i++)
                 {
                     workSheet.Cells[i + 3, "A"] = library[i];
@@ -218,17 +147,6 @@ namespace StatisticRDR
 
             MessageBox.Show("Файл " + fileName + " записан успешно!");
             
-        }
-        static private int Search(MarcRecord record,string date,string library)
-        {
-            
-            foreach (string overlapping in record.FMA(40))
-            {
-                MessageBox.Show(overlapping);
-            }
-
-
-            return 0;
         }
         static string ReturnAsNormalDate(string date)
         {
