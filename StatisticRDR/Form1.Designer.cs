@@ -54,6 +54,7 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -122,6 +123,7 @@
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "По выбранной библиотеке";
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.Visible = false;
             // 
             // textBoxAnswer
             // 
@@ -139,6 +141,7 @@
             this.comboBoxStatForms.Name = "comboBoxStatForms";
             this.comboBoxStatForms.Size = new System.Drawing.Size(196, 33);
             this.comboBoxStatForms.TabIndex = 8;
+            this.comboBoxStatForms.SelectedIndexChanged += new System.EventHandler(this.comboBoxStatForms_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -169,7 +172,7 @@
             this.настройкаПриложенияToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(982, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(982, 30);
             this.menuStrip1.TabIndex = 12;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -179,20 +182,20 @@
             this.списокБиблиотекToolStripMenuItem1,
             this.списокКатегорийToolStripMenuItem1});
             this.показатьСпискиToolStripMenuItem.Name = "показатьСпискиToolStripMenuItem";
-            this.показатьСпискиToolStripMenuItem.Size = new System.Drawing.Size(139, 24);
+            this.показатьСпискиToolStripMenuItem.Size = new System.Drawing.Size(139, 26);
             this.показатьСпискиToolStripMenuItem.Text = "Показать списки";
             // 
             // списокБиблиотекToolStripMenuItem1
             // 
             this.списокБиблиотекToolStripMenuItem1.Name = "списокБиблиотекToolStripMenuItem1";
-            this.списокБиблиотекToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            this.списокБиблиотекToolStripMenuItem1.Size = new System.Drawing.Size(220, 26);
             this.списокБиблиотекToolStripMenuItem1.Text = "Список библиотек";
             this.списокБиблиотекToolStripMenuItem1.Click += new System.EventHandler(this.списокБиблиотекToolStripMenuItem1_Click);
             // 
             // списокКатегорийToolStripMenuItem1
             // 
             this.списокКатегорийToolStripMenuItem1.Name = "списокКатегорийToolStripMenuItem1";
-            this.списокКатегорийToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            this.списокКатегорийToolStripMenuItem1.Size = new System.Drawing.Size(220, 26);
             this.списокКатегорийToolStripMenuItem1.Text = "Список категорий";
             this.списокКатегорийToolStripMenuItem1.Click += new System.EventHandler(this.списокКатегорийToolStripMenuItem1_Click);
             // 
@@ -202,7 +205,7 @@
             this.списокБиблиотекToolStripMenuItem,
             this.списокКатегорийToolStripMenuItem});
             this.изменитьСпискиToolStripMenuItem.Name = "изменитьСпискиToolStripMenuItem";
-            this.изменитьСпискиToolStripMenuItem.Size = new System.Drawing.Size(144, 24);
+            this.изменитьСпискиToolStripMenuItem.Size = new System.Drawing.Size(144, 26);
             this.изменитьСпискиToolStripMenuItem.Text = "Изменить списки";
             // 
             // списокБиблиотекToolStripMenuItem
@@ -225,7 +228,7 @@
             this.основнаяToolStripMenuItem,
             this.тестоваяToolStripMenuItem});
             this.сменитьВерсиюToolStripMenuItem.Name = "сменитьВерсиюToolStripMenuItem";
-            this.сменитьВерсиюToolStripMenuItem.Size = new System.Drawing.Size(140, 24);
+            this.сменитьВерсиюToolStripMenuItem.Size = new System.Drawing.Size(140, 26);
             this.сменитьВерсиюToolStripMenuItem.Text = "Сменить версию";
             // 
             // основнаяToolStripMenuItem
@@ -245,14 +248,14 @@
             // начальноеСостояниеToolStripMenuItem
             // 
             this.начальноеСостояниеToolStripMenuItem.Name = "начальноеСостояниеToolStripMenuItem";
-            this.начальноеСостояниеToolStripMenuItem.Size = new System.Drawing.Size(176, 24);
+            this.начальноеСостояниеToolStripMenuItem.Size = new System.Drawing.Size(176, 26);
             this.начальноеСостояниеToolStripMenuItem.Text = "Начальное состояние";
             this.начальноеСостояниеToolStripMenuItem.Click += new System.EventHandler(this.начальноеСостояниеToolStripMenuItem_Click);
             // 
             // настройкаПриложенияToolStripMenuItem
             // 
             this.настройкаПриложенияToolStripMenuItem.Name = "настройкаПриложенияToolStripMenuItem";
-            this.настройкаПриложенияToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
+            this.настройкаПриложенияToolStripMenuItem.Size = new System.Drawing.Size(190, 26);
             this.настройкаПриложенияToolStripMenuItem.Text = "Настройка приложения";
             this.настройкаПриложенияToolStripMenuItem.Click += new System.EventHandler(this.настройкаПриложенияToolStripMenuItem_Click);
             // 
@@ -281,11 +284,21 @@
             this.label5.TabIndex = 14;
             this.label5.Text = "Метка по версии";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(17, 467);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(179, 25);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Описание формы";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(982, 753);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.label4);
@@ -339,6 +352,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ToolStripMenuItem начальноеСостояниеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem настройкаПриложенияToolStripMenuItem;
+        private System.Windows.Forms.Label label6;
     }
 }
 

@@ -457,9 +457,30 @@ namespace StatisticRDR
             string s1 = t1[1];
             string s2 = t2[1];
             string s3 = t3[1];
-            MessageBox.Show(s0+s1+s2+s3);
+           // MessageBox.Show(s0+s1+s2+s3);
             return(s0, s1, s2, s3);
 
+        }
+
+        private void comboBoxStatForms_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxStatForms.SelectedIndex==0)//statform5
+            {
+                label6.Text = "Распределение книговыдач по категориям читателей  и местам выдач";
+            }
+            if (comboBoxStatForms.SelectedIndex == 1)//statform6
+            {
+                label6.Text = "Распределение посещений по категориям читателей  и местам выдач";
+            }
+            if (comboBoxStatForms.SelectedIndex == 2)//statform11
+            {
+                label6.Text = "Распределение кол - ва записанных читателей по категориям читателей и местам выдач";
+            }
+            if (comboBoxStatForms.SelectedIndex == 3)//statform12
+            {
+                label6.Text = "Распределение кол-ва перерегистрированных читателей по категориям читателей  и местам выдач";
+            }
+           
         }
     }
     

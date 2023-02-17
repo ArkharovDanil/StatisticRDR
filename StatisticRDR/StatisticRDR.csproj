@@ -97,6 +97,18 @@
     <LangVersion>7.3</LangVersion>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'version 0.23|AnyCPU'">
+    <OutputPath>bin\version 0.23\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'version 0.24|AnyCPU'">
+    <OutputPath>bin\version 0.24\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AM.Core, Version=1.9.2.2906, Culture=neutral, PublicKeyToken=6d1a05bf134decdf, processorArchitecture=MSIL">
       <HintPath>..\packages\ArsMagna.Core.1.9.2.2906\lib\net45\AM.Core.dll</HintPath>
