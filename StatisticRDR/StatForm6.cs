@@ -22,7 +22,7 @@ namespace StatisticRDR
         /// <param name="date"></param>
         /// <param name="CS"></param>
         /// <returns></returns>
-        static public int[] SearchForTable(string library,string[] categories,string date,string CS)
+        static public int[] SearchForTable(string library,string[] categories,string date,string CS,bool isFirst)
         {
             int[] categoriesArray = new int[categories.Length];
             int answer = 0;
@@ -39,7 +39,7 @@ namespace StatisticRDR
                         Connection.ParseConnectionString(connectionString);
                         Connection.Connect();
                         //MarcRecord record = new MarcRecord();
-                        string searchString = "VS=" + date + "/" + library;
+                       string searchString = "VS=" + date + "/" + library;
                         ///
                         /// Очевидно, что для поиска используется внутренний в ирбисе префикс. 
                         /// Префикс соответствует префиксу того словаря поиск по которому мы ведём.
@@ -53,26 +53,57 @@ namespace StatisticRDR
                         BatchRecordReader batch = new BatchRecordReader(Connection, Connection.Database, 5, found);
 
                         ;
-                        
-                        foreach (MarcRecord record in batch)
+                        if (!isFirst)
                         {
-
-                            foreach (string str in record.FMA(50))
+                            foreach (MarcRecord record in batch)
                             {
-                                
-                                for (int i = 1; i < categories.Length; i++)
-                                {
-                                    
 
-                                    if (str == categories[i])
+                                foreach (string str in record.FMA(50))
+                                {
+
+                                    for (int i = 1; i < categories.Length; i++)
                                     {
-                                        categoriesArray[i]++;
+
+
+                                        if (str == categories[i])
+                                        {
+                                            categoriesArray[i]++;
+                                        }
                                     }
+
                                 }
-                               
+
                             }
-                           
-                        }                       
+                        }
+                        else
+                        {
+                            foreach (MarcRecord record in batch)
+                            {
+                                string str;
+                                if (record.FMA(50)[0] != null)
+                                {
+                                    str = record.FMA(50)[0];
+                                }
+                                else
+                                {
+                                    str = "";
+                                }
+
+                                    for (int i = 1; i < categories.Length; i++)
+                                    {
+
+
+                                        if (str == categories[i])
+                                        {
+                                            categoriesArray[i]++;
+                                        }
+                                    }
+
+                                
+
+                            }
+                        }
+                                             
                     }
                 }
             }
@@ -91,19 +122,19 @@ namespace StatisticRDR
      /// <param name="categories"></param>
      /// <param name="date"></param>
      /// <param name="CS"></param>
-        static public void CreateTable(string[] library,string[] categories,string date,string CS)
+        static public void CreateTable(string[] library,string[] categories,string date,string CS, bool isFirst, bool countAsSum)
         {   
             int[][] tableForLibraries = new int[library.Count()][];
             for (int i=0;i<library.Count();i++)
             {
                // AddPercentAtTextBox(i, library.Count(), textBox);
-                tableForLibraries[i] = SearchForTable(library[i],categories,date,CS);
+                tableForLibraries[i] = SearchForTable(library[i],categories,date,CS,isFirst);
             }
-            ShowInExcelByCreating(tableForLibraries, library,categories, date);
+            ShowInExcelByCreating(tableForLibraries, library,categories, date, countAsSum);
             MessageBox.Show("Сделано");
         }
        
-        static public void ShowInExcelByCreating(int[][] tableForLibraries, string[] library, string[] categories, string date)
+        static public void ShowInExcelByCreating(int[][] tableForLibraries, string[] library, string[] categories, string date, bool countAsSum)
         {
             string path = "C:\\tempStatRDR\\StatForm6";
             if (!Directory.Exists(path))
@@ -122,6 +153,20 @@ namespace StatisticRDR
 
                 int RowsCount = tableForLibraries.GetUpperBound(0) + 1;
                 int ColumnsCount = tableForLibraries[0].Length;
+              //  int[] sum = new int[RowsCount];
+                if (countAsSum)
+                {
+                    for (int i = 0; i < RowsCount; i++)
+                    {
+                        int currentSum=0;
+                        for (int j = 1; j < ColumnsCount; j++) // по всем столбцам
+                        {
+                            currentSum+=tableForLibraries[i][j];
+                        }
+                        tableForLibraries[i][0] = currentSum;
+                    }//по всем строкам
+                }
+            
                 workSheet.Cells[1, "A"] = "Распределение посещений по категориям читателей  и местам выдач за "+ReturnAsNormalDate(date);
                 for (int i = 0;i<RowsCount;i++)
                 {

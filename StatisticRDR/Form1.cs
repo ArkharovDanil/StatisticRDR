@@ -16,8 +16,9 @@ namespace StatisticRDR
 {
     public delegate void MyDelegate(string[] str);
     public delegate void MyDelegate1(string s1,string s2,string s3,string s4);
+    public delegate void MyDelegateBool(bool b);
 
-    
+
     public partial class Form1 : Form
     {
         string ConnectionString;
@@ -27,20 +28,24 @@ namespace StatisticRDR
         string _port;
         string _user;
         string _password;
+        bool _searchOnlyOne;
+        bool _countAsSum;
 
         public Form1()
         {
-            InitializeComponent();         
+            InitializeComponent();
             InitializeForms();
             ReadLibrariesFromFile();
             ReadCategoriesFromFile();
             InitializeComboboxLibrary();
             SomethingLikeProgressWork();
             InitializeConnectionString();
+            InitializeBoolInSearch();
+            InitializeCountAsSum();
         }
         public void MakeProgressBarInvisible()
         {
-            progressBar1.Visible= false;
+            progressBar1.Visible = false;
         }
         public void MakeProgressBarVisible()
         {
@@ -76,26 +81,26 @@ namespace StatisticRDR
             }
             category = text.Split('\n');
             category = DeleteLastSymbolsExceptLastWord(category);
-            string[] answer=new string[category.GetUpperBound(0)];
-            if (category.Last()=="")
+            string[] answer = new string[category.GetUpperBound(0)];
+            if (category.Last() == "")
             {
-                for (int i=0;i< category.GetUpperBound(0);i++)
+                for (int i = 0; i < category.GetUpperBound(0); i++)
                 {
                     answer[i] = category[i];
                 }
                 category = answer;
             }
-            
+
         }
         public void ReadCategoriesFromForm2(string[] str)
         {
             category = str;
             SaveCategoriesInFile(str);
         }
- 
+
         public void ReadLibrariesFromForm2(string[] str)
         {
-            lib=str;
+            lib = str;
             SaveLibrariesInFile(lib);
         }
         public void SaveCategoriesInFile(string[] str)
@@ -108,13 +113,13 @@ namespace StatisticRDR
                 // альтернатива с помощью класса File
                 // File.Delete(path);
             }
-            else 
-            { 
+            else
+            {
                 fileInf.Create();
             }
-            
+
             StreamWriter wr = new StreamWriter("cat.txt", true);
-            
+
             foreach (string str2 in str)
             {
                 wr.WriteLine(str2);
@@ -141,7 +146,7 @@ namespace StatisticRDR
             {
                 wr.WriteLine(str2);
             }
-            
+
             wr.Close();
         }
 
@@ -150,7 +155,7 @@ namespace StatisticRDR
             return lib;
         }
         public string[] GetCategories()
-        {       
+        {
             return category;
         }
         public void InitializeForms()
@@ -161,7 +166,7 @@ namespace StatisticRDR
             comboBoxStatForms.Items.Add("StatForm12");
             comboBoxStatForms.SelectedIndex = 1;
         }
-        
+
         public void InitializeComboboxLibrary()
         {
             radioButton1.Checked = true;
@@ -177,9 +182,9 @@ namespace StatisticRDR
         public string[] DeleteLastSymbolsExceptLastWord(string[] str)
         {
             string[] _str = str;
-            for(int i=0;i<_str.Count()-1;i++)
+            for (int i = 0; i < _str.Count() - 1; i++)
             {
-                _str[i]=_str[i].Remove(_str[i].Length-1);
+                _str[i] = _str[i].Remove(_str[i].Length - 1);
             }
             return _str;
         }
@@ -187,7 +192,6 @@ namespace StatisticRDR
         {
             ifRadioButtonChecked();
             ifRadioButtonNotChecked();
-           // LoadingProgress();
         }
         public void InitializeLoadingCircle()
         {
@@ -198,26 +202,26 @@ namespace StatisticRDR
         {
             string[] lib = GetLibraries();
             string[] cat = GetCategories();
-            StatForm5.CreateTable(lib, cat, textBoxDate.Text, ConnectionString);
+            StatForm5.CreateTable(lib, cat, textBoxDate.Text, ConnectionString, _searchOnlyOne, _countAsSum);
         }
 
         public void DoStatForm6()
         {
             string[] lib = GetLibraries();
-            string[] cat = GetCategories();            
-            StatForm6.CreateTable(lib, cat, textBoxDate.Text, ConnectionString);
+            string[] cat = GetCategories();
+            StatForm6.CreateTable(lib, cat, textBoxDate.Text, ConnectionString, _searchOnlyOne,_countAsSum);
         }
         public void DoStatForm11()
         {
             string[] lib = GetLibraries();
             string[] cat = GetCategories();
-            StatForm11.CreateTable(lib, cat, textBoxDate.Text, ConnectionString);
+            StatForm11.CreateTable(lib, cat, textBoxDate.Text, ConnectionString, _searchOnlyOne, _countAsSum);
         }
         public void DoStatForm12()
         {
             string[] lib = GetLibraries();
             string[] cat = GetCategories();
-            StatForm12.CreateTable(lib, cat, textBoxDate.Text, ConnectionString);
+            StatForm12.CreateTable(lib, cat, textBoxDate.Text, ConnectionString, _searchOnlyOne, _countAsSum);
         }
         public void UpdatePercentAtTextBox(double x)
         {
@@ -226,7 +230,7 @@ namespace StatisticRDR
         }
         private void ifRadioButtonChecked()
         {
-           
+
             if (radioButton1.Checked)
             {
                 if (comboBoxStatForms.SelectedIndex == -1)
@@ -262,15 +266,15 @@ namespace StatisticRDR
                     textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
                 }
             }
-           
-            
+
+
         }
         private void ifRadioButtonNotChecked()
         {
             if (radioButton2.Checked)
             {
                 string[] cat = GetCategories();
-                MessageBox.Show(Convert.ToString(StatForm6.SearchForTable(comboBoxLibrary.Text,cat,textBoxDate.Text,ConnectionString)));
+                MessageBox.Show(Convert.ToString(StatForm6.SearchForTable(comboBoxLibrary.Text, cat, textBoxDate.Text, ConnectionString,_searchOnlyOne)));
             }
 
         }
@@ -282,7 +286,7 @@ namespace StatisticRDR
         private void списокБиблиотекToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MyDelegate @delegate = ReadLibrariesFromForm2;
-            Form2 newForm = new Form2(lib,@delegate);
+            Form2 newForm = new Form2(lib, @delegate);
             newForm.Show();
 
         }
@@ -294,7 +298,7 @@ namespace StatisticRDR
         private void списокКатегорийToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MyDelegate @delegate = ReadCategoriesFromForm2;
-            Form2 newForm = new Form2(category,@delegate);
+            Form2 newForm = new Form2(category, @delegate);
             newForm.Show();
         }
         /// <summary>
@@ -327,8 +331,8 @@ namespace StatisticRDR
 
         private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            for (int i = 0; i< 10000; i++)
-            {               
+            for (int i = 0; i < 10000; i++)
+            {
                 Thread.Sleep(500);
                 backgroundWorker1.ReportProgress(0);
             }
@@ -337,7 +341,7 @@ namespace StatisticRDR
 
         private void backgroundWorker1_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-            if (progressBar1.Value==99)
+            if (progressBar1.Value == 99)
             {
                 progressBar1.Value = 0;
             }
@@ -383,23 +387,20 @@ namespace StatisticRDR
 
         private void настройкаПриложенияToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MyDelegate1 @delegate = InitializeConnectionString;
-            (string, string, string, string) SeparateInfoConnection = SeparateConnectionString();
-            Form4 newForm = new Form4(SeparateInfoConnection.Item1,SeparateInfoConnection.Item2, SeparateInfoConnection.Item3, SeparateInfoConnection.Item4, @delegate);
-            newForm.Show();
+
         }
         public void InitializeConnectionString()
         {
-            (string,string,string,string)s = ReadSeparateConnectionStringFromFile();
-            InitializeConnectionString(s.Item1,s.Item2,s.Item3,s.Item4);
+            (string, string, string, string) s = ReadSeparateConnectionStringFromFile();
+            InitializeConnectionString(s.Item1, s.Item2, s.Item3, s.Item4);
         }
-        public void InitializeConnectionString(string host,string port,string user,string password)
+        public void InitializeConnectionString(string host, string port, string user, string password)
         {
             ConnectionString = "host=" + host + ";port=" + port + ";user=" + user + ";password=" + password + ";db=RDR;";
             label5.Text = "Версия: основная";
             SaveSeparateConnectionStringToFile(SeparateConnectionString());
         }
-        public (string,string,string,string) ReadSeparateConnectionStringFromFile()
+        public (string, string, string, string) ReadSeparateConnectionStringFromFile()
         {
             string[] answer;
             string text;
@@ -419,11 +420,11 @@ namespace StatisticRDR
                 }
                 answer = current;
             }
-            return(answer[0],answer[1],answer[2],answer[3]);
+            return (answer[0], answer[1], answer[2], answer[3]);
 
         }
-        
-        public void SaveSeparateConnectionStringToFile((string ,string ,string ,string)strTuple)
+
+        public void SaveSeparateConnectionStringToFile((string, string, string, string) strTuple)
         {
             string path = "ini1.txt";
             FileInfo fileInf = new FileInfo(path);
@@ -448,23 +449,22 @@ namespace StatisticRDR
 
         public (string, string, string, string) SeparateConnectionString()
         {
-           string[] s= ConnectionString.Split(';');
-           string[] t0 = s[0].Split('=');
-           string[] t1 = s[1].Split('=');
-           string[] t2 = s[2].Split('=');
-           string[] t3 = s[3].Split('=');
+            string[] s = ConnectionString.Split(';');
+            string[] t0 = s[0].Split('=');
+            string[] t1 = s[1].Split('=');
+            string[] t2 = s[2].Split('=');
+            string[] t3 = s[3].Split('=');
             string s0 = t0[1];
             string s1 = t1[1];
             string s2 = t2[1];
             string s3 = t3[1];
-           // MessageBox.Show(s0+s1+s2+s3);
-            return(s0, s1, s2, s3);
+            return (s0, s1, s2, s3);
 
         }
 
         private void comboBoxStatForms_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxStatForms.SelectedIndex==0)//statform5
+            if (comboBoxStatForms.SelectedIndex == 0)//statform5
             {
                 label6.Text = "Распределение книговыдач по категориям читателей  и местам выдач";
             }
@@ -480,7 +480,112 @@ namespace StatisticRDR
             {
                 label6.Text = "Распределение кол-ва перерегистрированных читателей по категориям читателей  и местам выдач";
             }
-           
+
+        }
+
+        private void настройкаПодключенияToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MyDelegate1 @delegate = InitializeConnectionString;
+            (string, string, string, string) SeparateInfoConnection = SeparateConnectionString();
+            Form4 newForm = new Form4(SeparateInfoConnection.Item1, SeparateInfoConnection.Item2, SeparateInfoConnection.Item3, SeparateInfoConnection.Item4, @delegate);
+            newForm.Show();
+        }
+        private void InitializeBoolInSearch()
+        {
+            _searchOnlyOne = LoadFromIsFirstFile();           
+        }
+        private void InitializeBoolInSearch(bool b)
+        {
+            _searchOnlyOne=b;
+            SaveIsFirstInSearchToFile(_searchOnlyOne);
+        }
+        private void настройкаПоискаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MyDelegateBool @delegate = InitializeBoolInSearch;
+            bool b = LoadFromIsFirstFile();
+            Form5 newForm = new Form5(b, @delegate);
+            newForm.Show();        
+        }
+        private void Save(string path,bool isTrue)
+        {
+            FileInfo fileInf = new FileInfo(path);
+            if (fileInf.Exists)
+            {
+                fileInf.Delete();
+                // альтернатива с помощью класса File
+                // File.Delete(path);
+            }
+            else
+            {
+                fileInf.Create();
+            }
+            StreamWriter wr = new StreamWriter(path, true);
+            if (isTrue)
+            {
+                wr.WriteLine("true");
+            }
+            else
+            {
+                wr.WriteLine("false");
+            }
+
+
+            wr.Close();
+        }
+        private bool LoadFromFile(string path)
+        {
+            string[] answer;
+            string text;
+            
+            using (StreamReader reader = new StreamReader(path))
+            {
+                text = reader.ReadToEnd();
+            }
+            answer = text.Split('\n');
+            answer = DeleteLastSymbolsExceptLastWord(answer);
+            foreach (string str in answer)
+            {
+                if (str == "true") return true;
+                if (str == "false") return false;
+            }
+            return false;
+        }
+        private bool LoadFromIsFirstFile()
+        {
+            string path = "ini2.txt";
+            return LoadFromFile(path);
+        }
+        public void SaveIsFirstInSearchToFile(bool isFirst)
+        {
+            string path = "ini2.txt";
+            Save(path, isFirst);
+        }
+        public void SaveCountAsSumToFile(bool isFirst)
+        {
+            string path = "ini3.txt";
+            Save(path, isFirst);
+        }
+        private bool LoadFromSumAsCount()
+        {
+            string path = "ini3.txt";
+            return LoadFromFile(path);
+        }
+        private void InitializeCountAsSum()
+        {
+            _countAsSum = LoadFromSumAsCount();
+        }
+        private void InitializeCountAsSum(bool b)
+        {
+            _countAsSum = b;
+            SaveCountAsSumToFile(_countAsSum);
+        }
+
+        private void настройкаВыводаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MyDelegateBool @delegate = InitializeCountAsSum;
+            bool b = LoadFromSumAsCount();
+            Form6 newForm = new Form6(b, @delegate);
+            newForm.Show();
         }
     }
     
