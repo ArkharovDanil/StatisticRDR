@@ -27,6 +27,7 @@ Global
 		version 0.41|Any CPU = version 0.41|Any CPU
 		version 0.50|Any CPU = version 0.50|Any CPU
 		version 0.51|Any CPU = version 0.51|Any CPU
+		version 0.6(08.06.2023)|Any CPU = version 0.6(08.06.2023)|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5F86527A-C916-4EF3-B828-E106BB4E95BF}.0.10|Any CPU.ActiveCfg = 0.10|Any CPU
@@ -69,6 +70,8 @@ Global
 		{5F86527A-C916-4EF3-B828-E106BB4E95BF}.version 0.50|Any CPU.Build.0 = version 0.50|Any CPU
 		{5F86527A-C916-4EF3-B828-E106BB4E95BF}.version 0.51|Any CPU.ActiveCfg = version 0.51|Any CPU
 		{5F86527A-C916-4EF3-B828-E106BB4E95BF}.version 0.51|Any CPU.Build.0 = version 0.51|Any CPU
+		{5F86527A-C916-4EF3-B828-E106BB4E95BF}.version 0.6(08.06.2023)|Any CPU.ActiveCfg = version 0.6(08.06.2023)|Any CPU
+		{5F86527A-C916-4EF3-B828-E106BB4E95BF}.version 0.6(08.06.2023)|Any CPU.Build.0 = version 0.6(08.06.2023)|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

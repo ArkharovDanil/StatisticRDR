@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.button1 = new System.Windows.Forms.Button();
             this.textBoxDate = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -54,11 +55,11 @@
             this.настройкаПодключенияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкаПоискаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкаВыводаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.настройкиОтбораToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.настройкиОтбораToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -289,6 +290,13 @@
             this.настройкаВыводаToolStripMenuItem.Text = "Настройка вывода";
             this.настройкаВыводаToolStripMenuItem.Click += new System.EventHandler(this.настройкаВыводаToolStripMenuItem_Click);
             // 
+            // настройкиОтбораToolStripMenuItem
+            // 
+            this.настройкиОтбораToolStripMenuItem.Name = "настройкиОтбораToolStripMenuItem";
+            this.настройкиОтбораToolStripMenuItem.Size = new System.Drawing.Size(265, 26);
+            this.настройкиОтбораToolStripMenuItem.Text = "Настройки отбора";
+            this.настройкиОтбораToolStripMenuItem.Click += new System.EventHandler(this.настройкиОтбораToolStripMenuItem_Click);
+            // 
             // backgroundWorker1
             // 
             this.backgroundWorker1.WorkerReportsProgress = true;
@@ -323,13 +331,6 @@
             this.label6.TabIndex = 15;
             this.label6.Text = "Описание формы";
             // 
-            // настройкиОтбораToolStripMenuItem
-            // 
-            this.настройкиОтбораToolStripMenuItem.Name = "настройкиОтбораToolStripMenuItem";
-            this.настройкиОтбораToolStripMenuItem.Size = new System.Drawing.Size(265, 26);
-            this.настройкиОтбораToolStripMenuItem.Text = "Настройки отбора";
-            this.настройкиОтбораToolStripMenuItem.Click += new System.EventHandler(this.настройкиОтбораToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -351,6 +352,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
