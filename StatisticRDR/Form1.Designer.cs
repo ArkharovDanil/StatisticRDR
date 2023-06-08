@@ -53,11 +53,12 @@
             this.настройкаПриложенияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкаПодключенияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкаПоискаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.настройкаВыводаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.настройкаВыводаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.настройкиОтбораToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -260,7 +261,8 @@
             this.настройкаПриложенияToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.настройкаПодключенияToolStripMenuItem,
             this.настройкаПоискаToolStripMenuItem,
-            this.настройкаВыводаToolStripMenuItem});
+            this.настройкаВыводаToolStripMenuItem,
+            this.настройкиОтбораToolStripMenuItem});
             this.настройкаПриложенияToolStripMenuItem.Name = "настройкаПриложенияToolStripMenuItem";
             this.настройкаПриложенияToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
             this.настройкаПриложенияToolStripMenuItem.Text = "Настройка приложения";
@@ -279,6 +281,13 @@
             this.настройкаПоискаToolStripMenuItem.Size = new System.Drawing.Size(265, 26);
             this.настройкаПоискаToolStripMenuItem.Text = "Настройка поиска";
             this.настройкаПоискаToolStripMenuItem.Click += new System.EventHandler(this.настройкаПоискаToolStripMenuItem_Click);
+            // 
+            // настройкаВыводаToolStripMenuItem
+            // 
+            this.настройкаВыводаToolStripMenuItem.Name = "настройкаВыводаToolStripMenuItem";
+            this.настройкаВыводаToolStripMenuItem.Size = new System.Drawing.Size(265, 26);
+            this.настройкаВыводаToolStripMenuItem.Text = "Настройка вывода";
+            this.настройкаВыводаToolStripMenuItem.Click += new System.EventHandler(this.настройкаВыводаToolStripMenuItem_Click);
             // 
             // backgroundWorker1
             // 
@@ -314,12 +323,12 @@
             this.label6.TabIndex = 15;
             this.label6.Text = "Описание формы";
             // 
-            // настройкаВыводаToolStripMenuItem
+            // настройкиОтбораToolStripMenuItem
             // 
-            this.настройкаВыводаToolStripMenuItem.Name = "настройкаВыводаToolStripMenuItem";
-            this.настройкаВыводаToolStripMenuItem.Size = new System.Drawing.Size(265, 26);
-            this.настройкаВыводаToolStripMenuItem.Text = "Настройка вывода";
-            this.настройкаВыводаToolStripMenuItem.Click += new System.EventHandler(this.настройкаВыводаToolStripMenuItem_Click);
+            this.настройкиОтбораToolStripMenuItem.Name = "настройкиОтбораToolStripMenuItem";
+            this.настройкиОтбораToolStripMenuItem.Size = new System.Drawing.Size(265, 26);
+            this.настройкиОтбораToolStripMenuItem.Text = "Настройки отбора";
+            this.настройкиОтбораToolStripMenuItem.Click += new System.EventHandler(this.настройкиОтбораToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -384,6 +393,7 @@
         private System.Windows.Forms.ToolStripMenuItem настройкаПодключенияToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem настройкаПоискаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem настройкаВыводаToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem настройкиОтбораToolStripMenuItem;
     }
 }
 

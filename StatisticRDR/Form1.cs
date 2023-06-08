@@ -30,6 +30,7 @@ namespace StatisticRDR
         string _password;
         bool _searchOnlyOne;
         bool _countAsSum;
+        bool _countAsDay;
 
         public Form1()
         {
@@ -42,6 +43,7 @@ namespace StatisticRDR
             InitializeConnectionString();
             InitializeBoolInSearch();
             InitializeCountAsSum();
+            InitializeCountAsDay();
         }
         public void MakeProgressBarInvisible()
         {
@@ -53,44 +55,74 @@ namespace StatisticRDR
         }
         public void ReadLibrariesFromFile()
         {
-            string text;
-            string path = "lib.txt";
-            using (StreamReader reader = new StreamReader(path))
+            try
             {
-                text = reader.ReadToEnd();
-            }
-            lib = text.Split('\n');
-            lib = DeleteLastSymbolsExceptLastWord(lib);
-            string[] answer = new string[lib.GetUpperBound(0)];
-            if (lib.Last() == "")
-            {
-                for (int i = 0; i < lib.GetUpperBound(0); i++)
+                string text;
+                string path = "lib.txt";
+                using (StreamReader reader = new StreamReader(path))
+                {
+                 text = reader.ReadToEnd();
+                }
+                 lib = text.Split('\n');
+                 lib = DeleteLastSymbolsExceptLastWord(lib);
+                  int t = WhereFirstNull(lib);
+                    if (t < lib.GetUpperBound(0) + 1)
+                    {
+                string[] answer = new string[t];
+                for (int i = 0; i < t; i++)
                 {
                     answer[i] = lib[i];
                 }
                 lib = answer;
             }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
         public void ReadCategoriesFromFile()
         {
-            string text;
-            string path = "cat.txt";
-            using (StreamReader reader = new StreamReader(path))
+            try
             {
-                text = reader.ReadToEnd();
-            }
-            category = text.Split('\n');
-            category = DeleteLastSymbolsExceptLastWord(category);
-            string[] answer = new string[category.GetUpperBound(0)];
-            if (category.Last() == "")
-            {
-                for (int i = 0; i < category.GetUpperBound(0); i++)
+                string text;
+                string path = "cat.txt";
+                using (StreamReader reader = new StreamReader(path))
                 {
-                    answer[i] = category[i];
+                    text = reader.ReadToEnd();
                 }
-                category = answer;
+                category = text.Split('\n');
+                category = DeleteLastSymbolsExceptLastWord(category);
+                int t = WhereFirstNull(category);
+                if (t < category.GetUpperBound(0) + 1)
+                {
+                    string[] answer = new string[t];
+                    for (int i = 0; i < t; i++)
+                    {
+                        answer[i] = category[i];
+                    }
+                    category = answer;
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+           
 
+        }
+        public int WhereFirstNull(string[] text)
+        {
+            int t = 0;
+            foreach (string str in text)
+            {
+                if (str == "")
+                {
+                    return t;
+                }
+                t++;
+            }
+            return t;
         }
         public void ReadCategoriesFromForm2(string[] str)
         {
@@ -202,26 +234,26 @@ namespace StatisticRDR
         {
             string[] lib = GetLibraries();
             string[] cat = GetCategories();
-            StatForm5.CreateTable(lib, cat, textBoxDate.Text, ConnectionString, _searchOnlyOne, _countAsSum);
+            StatForm5.CreateTable(lib, cat, textBoxDate.Text, ConnectionString, _searchOnlyOne, _countAsSum, _countAsDay);
         }
 
         public void DoStatForm6()
         {
             string[] lib = GetLibraries();
             string[] cat = GetCategories();
-            StatForm6.CreateTable(lib, cat, textBoxDate.Text, ConnectionString, _searchOnlyOne,_countAsSum);
+            StatForm6.CreateTable(lib, cat, textBoxDate.Text, ConnectionString, _searchOnlyOne,_countAsSum,_countAsDay);
         }
         public void DoStatForm11()
         {
             string[] lib = GetLibraries();
             string[] cat = GetCategories();
-            StatForm11.CreateTable(lib, cat, textBoxDate.Text, ConnectionString, _searchOnlyOne, _countAsSum);
+            StatForm11.CreateTable(lib, cat, textBoxDate.Text, ConnectionString, _searchOnlyOne, _countAsSum,_countAsDay);
         }
         public void DoStatForm12()
         {
             string[] lib = GetLibraries();
             string[] cat = GetCategories();
-            StatForm12.CreateTable(lib, cat, textBoxDate.Text, ConnectionString, _searchOnlyOne, _countAsSum);
+            StatForm12.CreateTable(lib, cat, textBoxDate.Text, ConnectionString, _searchOnlyOne, _countAsSum, _countAsDay);
         }
         public void UpdatePercentAtTextBox(double x)
         {
@@ -570,6 +602,16 @@ namespace StatisticRDR
             string path = "ini3.txt";
             return LoadFromFile(path);
         }
+        public void SaveCountAsDayToFile(bool isDay)
+        {
+            string path = "ini4.txt";
+            Save(path, isDay);
+        }
+        private bool LoadFromCountAsDay()
+        {
+            string path = "ini4.txt";
+            return LoadFromFile(path);
+        }
         private void InitializeCountAsSum()
         {
             _countAsSum = LoadFromSumAsCount();
@@ -579,12 +621,29 @@ namespace StatisticRDR
             _countAsSum = b;
             SaveCountAsSumToFile(_countAsSum);
         }
+        private void InitializeCountAsDay()
+        {
+            _countAsDay = LoadFromCountAsDay();
+        }
+        private void InitializeCountAsDay(bool b)
+        {
+            _countAsDay = b;
+            SaveCountAsDayToFile(_countAsDay);
+        }
 
         private void настройкаВыводаToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MyDelegateBool @delegate = InitializeCountAsSum;
             bool b = LoadFromSumAsCount();
             Form6 newForm = new Form6(b, @delegate);
+            newForm.Show();
+        }
+
+        private void настройкиОтбораToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MyDelegateBool @delegate = InitializeCountAsDay;
+            bool b = LoadFromCountAsDay();
+            Form7 newForm = new Form7(b, @delegate);
             newForm.Show();
         }
     }
