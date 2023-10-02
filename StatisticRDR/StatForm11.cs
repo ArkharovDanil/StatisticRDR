@@ -1,69 +1,71 @@
-﻿using System;
+﻿using ManagedIrbis;
+using System;
 using System.Linq;
-using ManagedIrbis;
-using ManagedIrbis.Batch;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
-using System.IO;
 
 namespace StatisticRDR
 {
     public class StatForm11
     {
-        string ConnectionString;
-        private static IrbisConnection Connection;
-        private static string prefix = "RD";
-        private static string name = "Распределение кол-ва записанных читателей по категориям читателей  и местам выдач за ";
-        private static string path = "C:\\tempStatRDR\\StatForm11";
+        private string ConnectionString;
 
-        /// <summary>
-        /// вход в алгоритм
-        /// </summary>
-        /// <param name="library"></param>
-        /// <param name="categories"></param>
-        /// <param name="date"></param>
-        /// <param name="CS"></param>
-        /// <returns></returns>
-        static public int[] SearchForTable(string library, string[] categories, string date, string CS, bool isFirst)
+        private static IrbisConnection Connection;
+
+        private static string prefix;
+
+        private static string name;
+
+        private static string path;
+
+        private static string delimiter;
+
+        static StatForm11()
         {
-            int[] categoriesArray = new int[categories.Length];
-            categoriesArray = StatFormInstruments.SearchForTable(library, categories, date, CS, isFirst, prefix, Connection);
-            return categoriesArray;
+            StatForm11.prefix = "RD=";
+            StatForm11.name = "Распределение кол-ва записанных читателей по категориям читателей  и местам выдач за ";
+            StatForm11.path = "C:\\tempStatRDR\\StatForm11\\";
+            StatForm11.delimiter = "-";
         }
-        static public int[][] SearchAllForTable(string[] libraries, string[] categories, string date, string CS, bool isFirst)
+
+        public StatForm11()
         {
-            
-            int[][] answerTableForLibraries = new int[libraries.Count()][];
-            answerTableForLibraries = StatFormInstruments.SearchAllForTable(libraries, categories, date, CS, isFirst, prefix, Connection);
-            return answerTableForLibraries;
         }
-        /// <summary>
-        /// поиск для таблицы?
-        /// </summary>
-        /// <param name="library"></param>
-        /// <param name="categories"></param>
-        /// <param name="date"></param>
-        /// <param name="CS"></param>
-        static public void CreateTable(string[] library, string[] categories, string date, string CS, bool isFirst, bool countAsSum, bool countAsDay)
+
+        public static void CreateTable(string[] library, string[] categories, string date, string CS, bool isFirst, bool countAsSum, bool countAsDay)
         {
-            int[][] tableForLibraries = new int[library.Count()][];
-            if (countAsDay)
-                for (int i = 0; i < library.Count(); i++)
-                {
-                    // AddPercentAtTextBox(i, library.Count(), textBox);
-                    tableForLibraries[i] = SearchForTable(library[i], categories, date, CS, isFirst);
-                }
+            int[][] numArray = new int[library.Count<string>()][];
+            if (!countAsDay)
+            {
+                numArray = StatForm11.SearchAllForTable(library, categories, date, CS, isFirst);
+            }
             else
             {
-                tableForLibraries = SearchAllForTable(library, categories, date, CS, isFirst);
+                for (int i = 0; i < library.Count<string>(); i++)
+                {
+                    numArray[i] = StatForm11.SearchForTable(library[i], categories, date, CS, isFirst);
+                }
             }
-            ShowInExcelByCreating(tableForLibraries, library, categories, date, countAsSum);
+            StatForm11.ShowInExcelByCreating(numArray, library, categories, date, countAsSum);
             MessageBox.Show("Сделано");
         }
 
-        static public void ShowInExcelByCreating(int[][] tableForLibraries, string[] library, string[] categories, string date, bool countAsSum)
+        public static int[][] SearchAllForTable(string[] libraries, string[] categories, string date, string CS, bool isFirst)
         {
-            StatFormInstruments.ShowInExcelByCreating(tableForLibraries, library, categories, date, countAsSum, path, name);
+            int[][] numArray = new int[libraries.Count<string>()][];
+            numArray = StatFormInstruments.SearchAllForThreadMethodForMonth(libraries, categories, date, CS, isFirst, StatForm11.prefix, StatForm11.Connection, StatForm11.delimiter);
+            return numArray;
+        }
+
+        public static int[] SearchForTable(string library, string[] categories, string date, string CS, bool isFirst)
+        {
+            int[] numArray = new int[(int)categories.Length];
+            numArray = StatFormInstruments.SearchForTable(library, categories, date, CS, isFirst, StatForm11.prefix, StatForm11.Connection, StatForm11.delimiter);
+            return numArray;
+        }
+
+        public static void ShowInExcelByCreating(int[][] tableForLibraries, string[] library, string[] categories, string date, bool countAsSum)
+        {
+            StatFormInstruments.ShowInExcelByCreating(tableForLibraries, library, categories, date, countAsSum, StatForm11.path, StatForm11.name);
         }
     }
 }

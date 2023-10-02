@@ -158,6 +158,12 @@
   <PropertyGroup>
     <ApplicationIcon>irbis.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'version 0.9%282.10.2023%29|AnyCPU'">
+    <OutputPath>bin\version 0.9%282.10.2023%29\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AM.Core, Version=1.9.2.2906, Culture=neutral, PublicKeyToken=6d1a05bf134decdf, processorArchitecture=MSIL">
       <HintPath>..\packages\ArsMagna.Core.1.9.2.2906\lib\net45\AM.Core.dll</HintPath>
@@ -262,6 +268,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatFormInstruments.cs" />
+    <Compile Include="WorkingWithThreads.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

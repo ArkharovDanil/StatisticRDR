@@ -1,69 +1,71 @@
-﻿using System;
+﻿using ManagedIrbis;
+using System;
 using System.Linq;
-using ManagedIrbis;
-using ManagedIrbis.Batch;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
-using System.IO;
 
 namespace StatisticRDR
 {
     public class StatForm5
     {
-        string ConnectionString;
+        private string ConnectionString;
+
         private static IrbisConnection Connection;
-        private static string prefix = "DW=";
-        private static string name = "Распределение книговыдач по категориям читателей  и местам выдач за ";
-        private static string path = "C:\\tempStatRDR\\StatForm5";
 
-        /// <summary>
-        /// вход в алгоритм
-        /// </summary>
-        /// <param name="library"></param>
-        /// <param name="categories"></param>
-        /// <param name="date"></param>
-        /// <param name="CS"></param>
-        /// <returns></returns>
-        static public int[] SearchForTable(string library, string[] categories, string date, string CS, bool isFirst)
-        {
-            int[] categoriesArray = new int[categories.Length];
-            categoriesArray = StatFormInstruments.SearchForTable(library, categories, date, CS, isFirst, prefix, Connection);
+        private static string prefix;
 
-            return categoriesArray;
-        }
-        static public int[][] SearchAllForTable(string[] libraries, string[] categories, string date, string CS, bool isFirst)
+        private static string name;
+
+        private static string path;
+
+        private static string delimiter;
+
+        static StatForm5()
         {
-            int[][] answerTableForLibraries = new int[libraries.Count()][];
-            answerTableForLibraries = StatFormInstruments.SearchAllForTable(libraries, categories, date, CS, isFirst, prefix, Connection);
-            return answerTableForLibraries;
+            StatForm5.prefix = "DW=";
+            StatForm5.name = "Распределение книговыдач по категориям читателей  и местам выдач за ";
+            StatForm5.path = "C:\\tempStatRDR\\StatForm5\\";
+            StatForm5.delimiter = "/";
         }
-        /// <summary>
-        /// поиск для таблицы?
-        /// </summary>
-        /// <param name="library"></param>
-        /// <param name="categories"></param>
-        /// <param name="date"></param>
-        /// <param name="CS"></param>
-        static public void CreateTable(string[] library, string[] categories, string date, string CS, bool isFirst, bool countAsSum, bool countAsDay)
+
+        public StatForm5()
         {
-            int[][] tableForLibraries = new int[library.Count()][];
-            if (countAsDay)
-                for (int i = 0; i < library.Count(); i++)
-                {
-                    // AddPercentAtTextBox(i, library.Count(), textBox);
-                    tableForLibraries[i] = SearchForTable(library[i], categories, date, CS, isFirst);
-                }
+        }
+
+        public static void CreateTable(string[] library, string[] categories, string date, string CS, bool isFirst, bool countAsSum, bool countAsDay)
+        {
+            int[][] numArray = new int[library.Count<string>()][];
+            if (!countAsDay)
+            {
+                numArray = StatForm5.SearchAllForTable(library, categories, date, CS, isFirst);
+            }
             else
             {
-                tableForLibraries = SearchAllForTable(library, categories, date, CS, isFirst);
+                for (int i = 0; i < library.Count<string>(); i++)
+                {
+                    numArray[i] = StatForm5.SearchForTable(library[i], categories, date, CS, isFirst);
+                }
             }
-            ShowInExcelByCreating(tableForLibraries, library, categories, date, countAsSum);
+            StatForm5.ShowInExcelByCreating(numArray, library, categories, date, countAsSum);
             MessageBox.Show("Сделано");
         }
-        static public void ShowInExcelByCreating(int[][] tableForLibraries, string[] library, string[] categories, string date, bool countAsSum)
+
+        public static int[][] SearchAllForTable(string[] libraries, string[] categories, string date, string CS, bool isFirst)
         {
-            StatFormInstruments.ShowInExcelByCreating(tableForLibraries, library, categories, date, countAsSum, path, name);
+            int[][] numArray = new int[libraries.Count<string>()][];
+            numArray = StatFormInstruments.SearchAllForThreadMethodForMonth(libraries, categories, date, CS, isFirst, StatForm5.prefix, StatForm5.Connection, StatForm5.delimiter);
+            return numArray;
         }
-      
+
+        public static int[] SearchForTable(string library, string[] categories, string date, string CS, bool isFirst)
+        {
+            int[] numArray = new int[(int)categories.Length];
+            numArray = StatFormInstruments.SearchForTable(library, categories, date, CS, isFirst, StatForm5.prefix, StatForm5.Connection, StatForm5.delimiter);
+            return numArray;
+        }
+
+        public static void ShowInExcelByCreating(int[][] tableForLibraries, string[] library, string[] categories, string date, bool countAsSum)
+        {
+            StatFormInstruments.ShowInExcelByCreating(tableForLibraries, library, categories, date, countAsSum, StatForm5.path, StatForm5.name);
+        }
     }
 }

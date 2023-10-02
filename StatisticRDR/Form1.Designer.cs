@@ -32,10 +32,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.textBoxDate = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxLibrary = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.textBoxAnswer = new System.Windows.Forms.TextBox();
             this.comboBoxStatForms = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -88,47 +84,6 @@
             this.label1.Size = new System.Drawing.Size(61, 25);
             this.label1.TabIndex = 2;
             this.label1.Text = "Дата";
-            // 
-            // comboBoxLibrary
-            // 
-            this.comboBoxLibrary.FormattingEnabled = true;
-            this.comboBoxLibrary.Location = new System.Drawing.Point(222, 114);
-            this.comboBoxLibrary.Name = "comboBoxLibrary";
-            this.comboBoxLibrary.Size = new System.Drawing.Size(121, 33);
-            this.comboBoxLibrary.TabIndex = 3;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(220, 86);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(123, 25);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Библиотека";
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(692, 114);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(243, 29);
-            this.radioButton1.TabIndex = 5;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "По всем библиотекам";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(692, 162);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(279, 29);
-            this.radioButton2.TabIndex = 6;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "По выбранной библиотеке";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            this.radioButton2.Visible = false;
             // 
             // textBoxAnswer
             // 
@@ -294,7 +249,7 @@
             // 
             this.настройкиОтбораToolStripMenuItem.Name = "настройкиОтбораToolStripMenuItem";
             this.настройкиОтбораToolStripMenuItem.Size = new System.Drawing.Size(265, 26);
-            this.настройкиОтбораToolStripMenuItem.Text = "Настройки отбора";
+            this.настройкиОтбораToolStripMenuItem.Text = "День/Месяц";
             this.настройкиОтбораToolStripMenuItem.Click += new System.EventHandler(this.настройкиОтбораToolStripMenuItem_Click);
             // 
             // backgroundWorker1
@@ -343,10 +298,6 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.comboBoxStatForms);
             this.Controls.Add(this.textBoxAnswer);
-            this.Controls.Add(this.radioButton2);
-            this.Controls.Add(this.radioButton1);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.comboBoxLibrary);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxDate);
             this.Controls.Add(this.button1);
@@ -366,12 +317,8 @@
 
         #endregion
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         public System.Windows.Forms.Button button1;
         public System.Windows.Forms.TextBox textBoxDate;
-        public System.Windows.Forms.ComboBox comboBoxLibrary;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.RadioButton radioButton2;
         public System.Windows.Forms.TextBox textBoxAnswer;
         public System.Windows.Forms.ComboBox comboBoxStatForms;
         private System.Windows.Forms.Label label3;

@@ -201,12 +201,7 @@ namespace StatisticRDR
 
         public void InitializeComboboxLibrary()
         {
-            radioButton1.Checked = true;
             string[] libs = GetLibraries();
-            for (int i = 0; i < libs.Length; i++)
-            {
-                comboBoxLibrary.Items.Add(lib[i]);
-            }
         }
         /// <summary>
         /// Удаление служебных символов из массива 
@@ -222,8 +217,27 @@ namespace StatisticRDR
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            ifRadioButtonChecked();
-            ifRadioButtonNotChecked();
+            {
+                if (this._countAsDay)
+                {
+                    if (this.textBoxDate.Text.Length == 8)
+                    {
+                        this.ifRadioButtonChecked();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Вы неправильно ввели дату");
+                    }
+                }
+                else if (this.textBoxDate.Text.Length == 6)
+                {
+                    this.ifRadioButtonChecked();
+                }
+                else
+                {
+                    MessageBox.Show("Вы неправильно ввели дату");
+                }
+            }
         }
         public void InitializeLoadingCircle()
         {
@@ -263,53 +277,40 @@ namespace StatisticRDR
         private void ifRadioButtonChecked()
         {
 
-            if (radioButton1.Checked)
+            if (this.comboBoxStatForms.SelectedIndex == -1)
             {
-                if (comboBoxStatForms.SelectedIndex == -1)
-                {
-                    MessageBox.Show("выберите статистическую форму");
-                }
-                if (comboBoxStatForms.SelectedIndex == 0)
-                {
-                    progressBar1.Visible = true;
-                    Thread myThread1 = new Thread(DoStatForm5);
-                    myThread1.Start();
-                    textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
-                }
-                if (comboBoxStatForms.SelectedIndex == 1)
-                {
-                    progressBar1.Visible = true;
-                    Thread myThread2 = new Thread(DoStatForm6);
-                    myThread2.Start();
-                    textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
-                }
-                if (comboBoxStatForms.SelectedIndex == 2)
-                {
-                    progressBar1.Visible = true;
-                    Thread myThread3 = new Thread(DoStatForm11);
-                    myThread3.Start();
-                    textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
-                }
-                if (comboBoxStatForms.SelectedIndex == 3)
-                {
-                    progressBar1.Visible = true;
-                    Thread myThread4 = new Thread(DoStatForm12);
-                    myThread4.Start();
-                    textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
-                }
+                MessageBox.Show("выберите статистическую форму");
             }
-
-
-        }
-        private void ifRadioButtonNotChecked()
-        {
-            if (radioButton2.Checked)
+            if (this.comboBoxStatForms.SelectedIndex == 0)
             {
-                string[] cat = GetCategories();
-                MessageBox.Show(Convert.ToString(StatForm6.SearchForTable(comboBoxLibrary.Text, cat, textBoxDate.Text, ConnectionString,_searchOnlyOne)));
+                this.progressBar1.Visible = true;
+                (new Thread(new ThreadStart(this.DoStatForm5))).Start();
+                this.textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
             }
-
+            if (this.comboBoxStatForms.SelectedIndex == 1)
+            {
+                this.progressBar1.Visible = true;
+                (new Thread(new ThreadStart(this.DoStatForm6))).Start();
+                this.textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
+            }
+            if (this.comboBoxStatForms.SelectedIndex == 2)
+            {
+                this.progressBar1.Visible = true;
+                (new Thread(new ThreadStart(this.DoStatForm11))).Start();
+                this.textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
+            }
+            if (this.comboBoxStatForms.SelectedIndex == 3)
+            {
+                this.progressBar1.Visible = true;
+                (new Thread(new ThreadStart(this.DoStatForm12))).Start();
+                this.textBoxAnswer.Text = "Подождите, пожалуйста...\n Не забудьте нажать \"начальное состояние\" после получения таблицы ";
+            }
         }
+
+
+        
+       
+        
         /// <summary>
         /// Редактировать список библиотек
         /// </summary>
@@ -383,20 +384,6 @@ namespace StatisticRDR
         private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             MessageBox.Show("Task completed");
-        }
-
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton1.Checked)
-            {
-                comboBoxLibrary.Visible = false;
-                label2.Visible = false;
-            }
-            else
-            {
-                comboBoxLibrary.Visible = true;
-                label2.Visible = true;
-            }
         }
 
         private void основнаяToolStripMenuItem_Click(object sender, EventArgs e)
