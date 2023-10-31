@@ -1,191 +1,71 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ManagedIrbis;
+using System;
 using System.Linq;
-using ManagedIrbis;
-using ManagedIrbis.Batch;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
+
 namespace StatisticRDR
 {
     public class StatForm11
     {
-        string ConnectionString;
+        private string ConnectionString;
+
         private static IrbisConnection Connection;
-        TextBox _textBoxAnswer;
-        StatForm11(List<string> rl, List<string> cl, TextBox textBoxAnswer, string CS)
+
+        private static string prefix;
+
+        private static string name;
+
+        private static string path;
+
+        private static string delimiter;
+
+        static StatForm11()
         {
-            SetRowsList(rl);
-            SetColumnsList(cl);
-            int[][] array = new int[rl.Count][];
-            _textBoxAnswer = textBoxAnswer;
-            ConnectionString = CS;
+            StatForm11.prefix = "RD=";
+            StatForm11.name = "Распределение кол-ва записанных читателей по категориям читателей  и местам выдач за ";
+            StatForm11.path = "C:\\tempStatRDR\\StatForm11\\";
+            StatForm11.delimiter = "-";
         }
 
+        public StatForm11()
+        {
+        }
 
-        private List<string> rowsList;
-        private List<string> columnsList;
-        List<string> GetRowsList()
+        public static void CreateTable(string[] library, string[] categories, string date, string CS, bool isFirst, bool countAsSum, bool countAsDay)
         {
-            return rowsList;
-
-        }
-        void SetRowsList(List<string> rl)
-        {
-            rowsList = rl;
-        }
-        List<string> GetColumnsList()
-        {
-            return columnsList;
-        }
-        void SetColumnsList(List<string> cl)
-        {
-            columnsList = cl;
-        }
-        static void AddStringAtTextbox(string s, TextBox textBox)
-        {
-            textBox.Text += "     " + s + "    ";
-            MessageBox.Show("Добавлена строка");
-        }
-        static void AddPercentAtTextBox(double cur, double max, TextBox textBox)
-        {
-            textBox.Text = ((cur / max) * 100).ToString() + "%";
-            textBox.Update();
-        }
-        static void UpdatePercentAtTextBox(double x, TextBox textBox)
-        {
-            double t = Convert.ToDouble(textBox.Text);
-            textBox.Text = (t + x * 100).ToString();
-            textBox.Update();
-        }
-        static public int[] SearchForTable(string library, string date, TextBox textBox, string CS)
-        {
-            string[] categories = InitializeCategories();
-            int[] categoriesArray = new int[13];
-            int answer = 0;
-            string connectionString = CS;
-            try
+            int[][] numArray = new int[library.Count<string>()][];
+            if (!countAsDay)
             {
-
+                numArray = StatForm11.SearchAllForTable(library, categories, date, CS, isFirst);
+            }
+            else
+            {
+                for (int i = 0; i < library.Count<string>(); i++)
                 {
-                    using (Connection = new IrbisConnection())
-                    {
-
-
-
-                        Connection.ParseConnectionString(connectionString);
-                        Connection.Connect();
-
-                        //MarcRecord record = new MarcRecord();
-                        string searchString = "RD=" + date + "-" + library;
-                        ///
-                        /// Очевидно, что для поиска используется внутренний в ирбисе префикс.
-                        /// Префикс соответствует префиксу того словаря поиск по которому мы ведём.
-                        ///
-
-
-                        int[] found = Connection.Search(searchString);
-                        answer = found.Count();
-                        categoriesArray[0] = answer;
-
-                        BatchRecordReader batch = new BatchRecordReader(Connection, Connection.Database, 5, found);
-
-                        ;
-
-                        foreach (MarcRecord record in batch)
-                        {
-
-                            foreach (string str in record.FMA(50))
-                            {
-
-                                for (int i = 1; i < 13; i++)
-                                {
-
-
-                                    if (str == categories[i])
-                                    {
-                                        categoriesArray[i]++;
-                                    }
-                                }
-
-                            }
-
-                        }
-
-                        UpdatePercentAtTextBox(1 / 5, textBox);
-                    }
+                    numArray[i] = StatForm11.SearchForTable(library[i], categories, date, CS, isFirst);
                 }
             }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-
-            return categoriesArray;
-        }
-
-        static public string[] InitializeCategories()
-        {
-            string[] category =
-            {
-                "Всего",
-                "Рук.",
-                "Спец.",
-                "Служ.",
-                "Раб.",
-                "Студ." ,
-                "Шк.",
-                "Проч.",
-                "КЗА",
-                "КП" ,
-                "ПВЛ",
-                "СБ",
-                "Мероприятие"
-        };
-            return category;
-        }
-        static public void CreateTable(string[] library, string date, TextBox textBox, string CS)
-        {
-            int[][] tableForLibraries = new int[library.Count()][];
-            for (int i = 0; i < library.Count(); i++)
-            {
-                AddPercentAtTextBox(i, library.Count(), textBox);
-                tableForLibraries[i] = SearchForTable(library[i], date, textBox, CS);
-            }
-            ShowInExcel(tableForLibraries);
+            StatForm11.ShowInExcelByCreating(numArray, library, categories, date, countAsSum);
             MessageBox.Show("Сделано");
         }
-        static public void ShowInExcel(int[][] tableForLibraries)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            // Задаем расширение имени файла по умолчанию (открывается папка с программой)
-            ofd.DefaultExt = "*.xls;*.xlsx";
-            // Задаем строку фильтра имен файлов, которая определяет варианты
-            ofd.Filter = "файл Excel (data.xls)|*.xls";
-            // Задаем заголовок диалогового окна
-            ofd.Title = "Выберите файл базы данных";
-            ofd.ShowDialog();
 
-            Excel.Application ObjWorkExcel = new Excel.Application();
-            Excel.Workbook ObjWorkBook = ObjWorkExcel.Workbooks.Open(ofd.FileName);
-            Excel.Worksheet ObjWorkSheet = (Excel.Worksheet)ObjWorkBook.Sheets[1]; //получить 1-й лист
-            for (int i = 0; i < 11; i++) //по всем строкам
-                for (int j = 0; j < 13; j++) // по всем столбцам
-                    ObjWorkSheet.Cells[i + 7, j + 3] = tableForLibraries[i][j]; //записываем данные
-                                                                                // ObjWorkBook.Close(true, Type.Missing, Type.Missing); //закрыть и сохранить
-            ObjWorkExcel.Visible = true;
-            ObjWorkExcel.UserControl = true;
-            //ObjWorkExcel.Quit(); // выйти из Excel
+        public static int[][] SearchAllForTable(string[] libraries, string[] categories, string date, string CS, bool isFirst)
+        {
+            int[][] numArray = new int[libraries.Count<string>()][];
+            numArray = StatFormInstruments.SearchAllForThreadMethodForMonth(libraries, categories, date, CS, isFirst, StatForm11.prefix, StatForm11.Connection, StatForm11.delimiter);
+            return numArray;
         }
-        static private int Search(MarcRecord record, string date, string library)
+
+        public static int[] SearchForTable(string library, string[] categories, string date, string CS, bool isFirst)
         {
+            int[] numArray = new int[(int)categories.Length];
+            numArray = StatFormInstruments.SearchForTable(library, categories, date, CS, isFirst, StatForm11.prefix, StatForm11.Connection, StatForm11.delimiter);
+            return numArray;
+        }
 
-            foreach (string overlapping in record.FMA(40))
-            {
-                MessageBox.Show(overlapping);
-            }
-
-
-            return 0;
+        public static void ShowInExcelByCreating(int[][] tableForLibraries, string[] library, string[] categories, string date, bool countAsSum)
+        {
+            StatFormInstruments.ShowInExcelByCreating(tableForLibraries, library, categories, date, countAsSum, StatForm11.path, StatForm11.name);
         }
     }
 }
